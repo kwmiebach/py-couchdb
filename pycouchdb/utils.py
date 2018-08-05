@@ -146,3 +146,21 @@ def force_text(data, encoding="utf-8"):
     if isinstance(data, bytes_type):
         data = data.decode(encoding)
     return data
+
+class DateTimeAndDecimalEncoder(json.JSONEncoder):
+    """
+    Encoder for use in json.dumps() to allow decimal.Decimal
+    and datetime.datetime.
+    """
+    def default(self, obj):
+        import datetime
+        import decimal
+        if isinstance(obj, datetime.datetime):
+            encoded_object = obj.isoformat()
+            # Example for isoformat() : "2014-06-22T04:44:14.057000"
+        elif isinstance(obj, decimal.Decimal):
+            # via http://stackoverflow.com/questions/1960516/python-json-serialize-a-decimal-object
+            return str(obj)
+        else:
+            encoded_object =json.JSONEncoder.default(self, obj)
+        return encoded_object
