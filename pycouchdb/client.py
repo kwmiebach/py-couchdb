@@ -380,7 +380,7 @@ class Database(object):
         else:
             params = {}
 
-        data = utils.force_bytes(json.dumps(_doc))
+        data = utils.force_bytes(json.dumps(_doc,cls=utils.DateTimeAndDecimalEncoder))
         (resp, result) = self.resource(_doc['_id']).put(data=data,
             params=params)
 
